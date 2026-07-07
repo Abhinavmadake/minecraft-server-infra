@@ -54,6 +54,13 @@ while 26.1+ needs Java 25+, so each server's `.env` pins its own
 `JAVA_VERSION` and the launcher finds a matching JDK (via `java_home` or
 Homebrew kegs).
 
+On interactive starts the launcher also checks the Purpur API and offers to
+update — new builds of your Minecraft version, or new Minecraft versions
+entirely (the old jar is kept as `server.jar.bak`, and upgrading to 26.x
+bumps the server's Java pin automatically). It never blocks startup: offline,
+non-interactive, or already-running servers skip the check, and
+`SKIP_UPDATE_CHECK=1` disables it.
+
 The launcher puts the server console in one tmux pane and the tunnel agent
 in the other, so both survive the terminal closing and the console stays
 reachable for admin commands. Re-running it attaches to the existing session
