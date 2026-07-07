@@ -11,10 +11,15 @@ infrastructure around them.
 ## The problem
 
 Friends couldn't connect to a server running on a home network behind
-CGNAT — there was no public IP to port-forward to. The fix was a reverse
-tunnel through [playit.gg](https://playit.gg): a lightweight agent on the
-Mac holds an outbound connection to playit's edge, which gives the server a
-stable public address.
+CGNAT — there was no public IP to port-forward to. The fix is a reverse
+tunnel: an agent on the Mac holds an outbound connection to a public edge,
+which forwards player traffic back to the server.
+
+The first tunnel was [ngrok](https://ngrok.com) (`ngrok tcp 25565`) — much
+faster to set up, but its free tier assigns a random address and port on
+every restart, so the server address had to be re-shared before each
+session. Switching to [playit.gg](https://playit.gg) traded setup effort for
+a stable public address that survives restarts.
 
 ```
 players ──▶ playit.gg edge ──▶ outbound tunnel ──▶ playit-cli (Mac) ──▶ localhost:2556x (server)
