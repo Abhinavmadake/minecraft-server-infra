@@ -29,19 +29,30 @@ cd ~/playit-agent
 cargo build --release   # → target/release/playit-cli (arm64 Mach-O)
 ```
 
+## Quick start
+
+```sh
+./setup.sh                    # one-time: installs JDKs, tmux, Rust; builds playit
+./create-server.sh survival   # scaffold a server (latest Purpur, EULA prompt)
+./start-server.sh survival    # run it (server + tunnel in a tmux session)
+./stop-server.sh survival     # graceful shutdown (saves the world first)
+```
+
 ## Layout
 
 ```
+setup.sh           # dependency check/install + playit source build
+create-server.sh   # downloads a Purpur jar, writes tuned config + .env entry
 start-server.sh    # launcher: server + tunnel in a two-pane tmux session
-servers/*.env      # per-server config (session name, dir, jar, heap size)
+stop-server.sh     # sends `stop` to the console, waits, closes the session
+servers/*.env      # per-server config (session, dir, jar, heap, Java version)
 legacy/            # earlier script versions, kept as an evolution record
 ```
 
-Usage:
-
-```sh
-./start-server.sh purpur     # start (or reattach to) the purpur server
-```
+Java versions are resolved per server: Minecraft 1.20.5–1.21.x needs Java 21
+while 26.1+ needs Java 25+, so each server's `.env` pins its own
+`JAVA_VERSION` and the launcher finds a matching JDK (via `java_home` or
+Homebrew kegs).
 
 The launcher puts the server console in one tmux pane and the tunnel agent
 in the other, so both survive the terminal closing and the console stays
